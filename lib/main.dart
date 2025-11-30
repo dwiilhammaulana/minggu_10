@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:minggu_10/screens/my_simple_notes.dart';
 import 'package:minggu_10/screens/splash_screen.dart';
 import 'package:minggu_10/screens/home_screen.dart';
 
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const SplashScreen(),
         '/home': (context) => const HomeScreen(),
+        '/notes': (context) => const MySimpleNotes(),
       },
     );
   }

@@ -1,10 +1,22 @@
-import 'package:flutter/material.dart';
+class Note {
+  final int? id;
+  final String title;
+  final String content;
 
-class Note extends StatelessWidget {
-  const Note({super.key});
+  Note({this.id, required this.title, required this.content});
 
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
+  factory Note.fromMap(Map<String, dynamic> json) =>
+      Note(
+        content: json['content'],
+        title: json['title'],
+        id: json['id'],
+      );
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'content': content,
+    };
   }
 }
