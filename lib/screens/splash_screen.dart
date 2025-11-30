@@ -8,15 +8,27 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
+  late final AnimationController _controller;
+
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(vsync: this);
+
+    // Timer 3 detik tetap dipakai
     _navigateToHome();
   }
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   _navigateToHome() async {
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 5));
     if (mounted) {
       Navigator.pushReplacementNamed(context, '/home');
     }
@@ -30,11 +42,19 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Animasi Lottie
-            Lottie.network(
-              'https://lottie.host/83a879d5-9462-43ea-9daa-c9c51d721405/8xSvRuMSJY.json',
-              width: 200,
-              height: 200,
+            Lottie.asset(
+              'assets/animations/Tangan.json',
+              width: 300,
+              height: 300,
+              fit: BoxFit.contain,
+              controller: _controller,
+              repeat: true,
+              animate: true,
+              onLoaded: (composition) {
+                _controller
+                  ..duration = composition.duration
+                  ..repeat(); // TIDAK ADA NAVIGASI DI SINI
+              },
             ),
             const SizedBox(height: 24),
             const Text(
