@@ -10,6 +10,60 @@ class MySimpleNotes extends StatefulWidget {
 }
 
 class _MySimpleNotesState extends State<MySimpleNotes> {
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _contentController = TextEditingController();
+
+  void _showForm() {
+    _titleController.clear();
+    _contentController.clear();
+
+    showModalBottomSheet(
+      context: context,
+      elevation: 5,
+      isScrollControlled: true,
+      builder: (_) => Container(
+        padding: EdgeInsets.only(
+          top: 15,
+          left: 15,
+          right: 15,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 120,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            TextField(
+              controller: _titleController,
+              decoration: const InputDecoration(hintText: 'Judul Catatan'),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _contentController,
+              decoration: const InputDecoration(hintText: 'Isi Catatan'),
+              maxLines: 3,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              child: const Text("Simpan Catatan"),
+              onPressed: () async {
+                String title = _titleController.text;
+                String content = _contentController.text;
+
+                if (title.isNotEmpty && content.isNotEmpty) {
+                  await DatabaseHelper.instance.create(
+                    Note(title: title, content: content),
+                  );
+                  Navigator.of(context).pop();
+                  setState(() {});
+                }
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,13 +86,10 @@ class _MySimpleNotesState extends State<MySimpleNotes> {
                   title: Text(note.title),
                   subtitle: Text(note.content),
                   trailing: IconButton(
-                    icon: Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    ),
+                    icon: const Icon(Icons.delete, color: Colors.red),
                     onPressed: () async {
                       await DatabaseHelper.instance.delete(note.id!);
-                      setState(() {}); // Refresh UI
+                      setState(() {});
                     },
                   ),
                 ),
@@ -47,18 +98,9 @@ class _MySimpleNotesState extends State<MySimpleNotes> {
           );
         },
       ),
-
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () async {
-          await DatabaseHelper.instance.create(
-            Note(
-              title: 'Catatan Baru',
-              content: 'Isi catatan otomatis pada ${DateTime.now()}',
-            ),
-          );
-          setState(() {}); // Refresh UI
-        },
+        child: const Icon(Icons.add),
+        onPressed: _showForm,
       ),
     );
   }

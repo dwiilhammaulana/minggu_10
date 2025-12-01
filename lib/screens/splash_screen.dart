@@ -42,8 +42,8 @@ class _SplashScreenState extends State<SplashScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Lottie.asset(
-              'assets/animations/Tangan.json',
+            Lottie.network(
+              'https://lottie.host/88cc90ec-b228-416d-915f-24019ea1497d/qAjMGRSY9C.json',
               width: 300,
               height: 300,
               fit: BoxFit.contain,
@@ -73,3 +73,7 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 }
+
+
+
+
